@@ -1,6 +1,14 @@
 // Vercel serverless function
 // Requires OPENAI_API_KEY set as an environment variable in the Vercel project settings.
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '8mb'
+    }
+  }
+};
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'صرف POST درخواست قبول ہے' });
