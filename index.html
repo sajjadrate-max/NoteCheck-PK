@@ -71,6 +71,12 @@
     display:flex; gap:10px; overflow-x:auto; padding: 4px 2px 12px;
     scrollbar-width: thin;
   }
+  .ref-link{
+    display:inline-block; font-family:'Spectral', serif; font-size:0.88rem;
+    color: var(--green-deep); text-decoration:none; border-bottom:1px dashed var(--green-deep);
+    margin-bottom:6px;
+  }
+  .ref-link:hover{ color: var(--gold); border-color: var(--gold); }
   .denom-chip{
     flex: 0 0 auto; width:74px; height:96px; border-radius:5px;
     position:relative; cursor:pointer; color:#fff;
@@ -110,6 +116,10 @@
   .light-panel{ padding: 18px 16px; }
 
   .upload-panel{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
     border:2px dashed var(--line);
     border-radius:6px;
     padding: 26px 16px;
@@ -118,10 +128,12 @@
     cursor:pointer;
     transition: border-color .2s ease;
     margin-top: 8px;
+    width:100%;
   }
   .upload-panel:hover{ border-color: var(--gold); }
   .upload-panel input{ display:none; }
-  .upload-icon{ font-size:2rem; display:block; margin-bottom:8px; }
+  .upload-icon{ font-size:2rem; margin-bottom:8px; }
+  .upload-panel .main-text{ font-size:1rem; margin-bottom:4px; }
   .upload-panel .hint{ font-size:0.88rem; color:rgba(33,28,19,0.6); }
 
   .preview-wrap{ margin-top:16px; text-align:center; }
@@ -225,11 +237,12 @@
       <div class="denom-chip d20" data-value="20" role="option" tabindex="0"><span class="val">20</span><span class="cur">روپے</span></div>
       <div class="denom-chip d10" data-value="10" role="option" tabindex="0"><span class="val">10</span><span class="cur">روپے</span></div>
     </div>
+    <a class="ref-link" href="https://www.sbp.org.pk" target="_blank" rel="noopener">🔗 اصلی نوٹ کی سرکاری تصویر SBP کی ویب سائٹ پر ملاحظہ کریں</a>
   </div>
 
   <label class="upload-panel" id="uploadPanel">
     <span class="upload-icon">📷</span>
-    <span>نوٹ کی تصویر اپلوڈ کریں یا کیمرے سے کھینچیں</span><br>
+    <span class="main-text">نوٹ کی تصویر اپلوڈ کریں یا کیمرے سے کھینچیں</span>
     <span class="hint">صاف روشنی میں، پورا نوٹ نظر آنا چاہیے</span>
     <input type="file" id="fileInput" accept="image/*" capture="environment">
   </label>
@@ -245,7 +258,7 @@
     </div>
     <label class="upload-panel light-panel" id="lightUploadPanel">
       <span class="upload-icon">🔦</span>
-      <span>روشنی کے سامنے کی تصویر شامل کریں</span><br>
+      <span class="main-text">روشنی کے سامنے کی تصویر شامل کریں</span>
       <span class="hint">اختیاری، لیکن سفارش کی جاتی ہے</span>
       <input type="file" id="lightFileInput" accept="image/*" capture="environment">
     </label>
