@@ -1,0 +1,17 @@
+{
+  "name": "نوٹ اسکینر — AI بصری جائزہ",
+  "short_name": "نوٹ اسکینر",
+  "description": "پاکستانی کرنسی نوٹ کی تصویر اپلوڈ کریں، AI نظر آنے والی خصوصیات کا جائزہ لے گا",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F2EAD4",
+  "theme_color": "#0B241A",
+  "lang": "ur",
+  "dir": "rtl",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
