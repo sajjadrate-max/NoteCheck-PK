@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نوٹ اسکینر — AI بصری جائزہ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Spectral:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F2EAD4; --paper-dark:#E7DCBC; --ink:#211C13;
+    --green:#123526; --green-deep:#0B241A; --gold:#A9812F;
+    --maroon:#6E2A2A; --amber:#8A5A1E; --line:rgba(33,28,19,0.28);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Noto Nastaliq Urdu', serif; line-height:2;
+    padding: 26px 14px 60px;
+  }
+  .wrap{max-width:640px; margin:0 auto;}
+  header{text-align:center; margin-bottom:18px;}
+  .rule{height:3px; width:120px; margin:0 auto 14px; background:repeating-linear-gradient(90deg, var(--gold) 0 6px, transparent 6px 10px);}
+  h1{font-size:1.7rem; color:var(--green-deep); margin:0 0 8px; font-weight:700;}
+  header p{margin:0; color:rgba(33,28,19,0.75); font-size:1rem;}
+
+  .warn-banner{
+    border:2px solid var(--maroon);
+    background: rgba(110,42,42,0.07);
+    border-radius:4px;
+    padding:14px 16px;
+    margin: 18px 0;
+    font-size:0.98rem;
+  }
+  .warn-banner b{color:var(--maroon); display:block; margin-bottom:4px; font-size:1.02rem;}
+
+  .upload-panel{
+    border:2px dashed var(--line);
+    border-radius:6px;
+    padding: 26px 16px;
+    text-align:center;
+    background: var(--paper-dark);
+    cursor:pointer;
+    transition: border-color .2s ease;
+  }
+  .upload-panel:hover{ border-color: var(--gold); }
+  .upload-panel input{ display:none; }
+  .upload-icon{ font-size:2rem; display:block; margin-bottom:8px; }
+  .upload-panel .hint{ font-size:0.88rem; color:rgba(33,28,19,0.6); }
+
+  .preview-wrap{ margin-top:16px; text-align:center; }
+  .preview-wrap img{
+    max-width:100%; max-height:320px;
+    border:2px solid var(--ink); border-radius:4px;
+  }
+
+  .actions{ display:flex; gap:10px; justify-content:center; margin-top:16px; flex-wrap:wrap; }
+  button.primary, button.secondary{
+    font-family:'Noto Nastaliq Urdu', serif;
+    font-size:1rem; padding:11px 22px; border-radius:3px; cursor:pointer;
+    border:1.5px solid var(--green-deep);
+  }
+  button.primary{ background:var(--green-deep); color:var(--paper); }
+  button.primary:disabled{ opacity:0.5; cursor:not-allowed; }
+  button.secondary{ background:transparent; color:var(--green-deep); }
+
+  .loading{ text-align:center; margin-top:20px; color:rgba(33,28,19,0.7); display:none; }
+  .loading.show{ display:block; }
+  .spinner{
+    width:28px; height:28px; margin:0 auto 10px;
+    border:3px solid var(--paper-dark); border-top-color:var(--gold);
+    border-radius:50%; animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  .result{ display:none; margin-top:24px; }
+  .result.show{ display:block; }
+
+  .risk-badge{
+    display:inline-block; padding:6px 16px; border-radius:3px;
+    font-family:'Spectral', serif; font-weight:600; font-size:1rem;
+    margin-bottom:14px; border:1.5px solid;
+  }
+  .risk-low{ background:rgba(18,53,38,0.08); border-color:var(--green); color:var(--green-deep); }
+  .risk-medium{ background:rgba(138,90,30,0.1); border-color:var(--amber); color:var(--amber); }
+  .risk-high{ background:rgba(110,42,42,0.1); border-color:var(--maroon); color:var(--maroon); }
+
+  .obs-list{ border-top:1px solid var(--line); }
+  .obs-item{ padding:12px 2px; border-bottom:1px solid var(--line); }
+  .obs-item b{ display:block; font-size:1.02rem; }
+  .obs-item span{ font-size:0.94rem; color:rgba(33,28,19,0.78); }
+
+  .summary-box{
+    border:1.5px solid var(--line); border-radius:4px;
+    padding:14px 16px; margin-top:14px; background:var(--paper-dark);
+    font-size:0.98rem;
+  }
+
+  .error-box{
+    display:none; margin-top:16px; padding:12px 16px;
+    border:1.5px solid var(--maroon); border-radius:4px; color:var(--maroon);
+    background: rgba(110,42,42,0.06); font-size:0.95rem;
+  }
+  .error-box.show{ display:block; }
+
+  footer{
+    margin-top:30px; padding-top:16px; border-top:1px double var(--line);
+    font-size:0.9rem; color:rgba(33,28,19,0.7); text-align:center;
+  }
+  footer strong{ color:var(--maroon); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="rule"></div>
+    <h1>نوٹ اسکینر — AI بصری جائزہ</h1>
+    <p>پاکستانی کرنسی نوٹ کی تصویر اپلوڈ کریں، AI نظر آنے والی خصوصیات کا جائزہ لے گا</p>
+  </header>
+
+  <div class="warn-banner">
+    <b>⚠ اہم انتباہ</b>
+    یہ صرف تصویر کی بنیاد پر ایک AI اندازہ ہے، حتمی ثبوت نہیں۔ UV، مقناطیسی سیاہی اور کاغذ کی ساخت جیسی چیزیں تصویر سے چیک نہیں ہو سکتیں۔ کسی بھی مشکوک نوٹ کی حتمی تصدیق ہمیشہ اپنے بینک یا اسٹیٹ بینک آف پاکستان سے کروائیں۔ اس نتیجے کی بنیاد پر لین دین کا فیصلہ نہ کریں۔
+  </div>
+
+  <label class="upload-panel" id="uploadPanel">
+    <span class="upload-icon">📷</span>
+    <span>نوٹ کی تصویر اپلوڈ کریں یا کیمرے سے کھینچیں</span><br>
+    <span class="hint">صاف روشنی میں، پورا نوٹ نظر آنا چاہیے</span>
+    <input type="file" id="fileInput" accept="image/*" capture="environment">
+  </label>
+
+  <div class="preview-wrap" id="previewWrap" style="display:none;">
+    <img id="previewImg" alt="منتخب کردہ نوٹ کی تصویر">
+  </div>
+
+  <div class="actions">
+    <button class="primary" id="analyzeBtn" disabled>تصویر کا جائزہ لیں</button>
+    <button class="secondary" id="clearBtn" style="display:none;">دوبارہ منتخب کریں</button>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <span>تصویر کا تجزیہ کیا جا رہا ہے…</span>
+  </div>
+
+  <div class="error-box" id="errorBox"></div>
+
+  <div class="result" id="result">
+    <div id="riskBadge"></div>
+    <div class="obs-list" id="obsList"></div>
+    <div class="summary-box" id="summaryBox"></div>
+  </div>
+
+  <footer>
+    یہ ٹول تعلیمی و رہنمائی کے مقصد کے لیے ہے۔ <strong>حتمی تصدیق کا متبادل نہیں۔</strong>
+  </footer>
+
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const previewWrap = document.getElementById('previewWrap');
+const previewImg = document.getElementById('previewImg');
+const analyzeBtn = document.getElementById('analyzeBtn');
+const clearBtn = document.getElementById('clearBtn');
+const uploadPanel = document.getElementById('uploadPanel');
+const loading = document.getElementById('loading');
+const result = document.getElementById('result');
+const errorBox = document.getElementById('errorBox');
+
+let base64Image = null;
+
+fileInput.addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    base64Image = reader.result; // data URL
+    previewImg.src = base64Image;
+    previewWrap.style.display = 'block';
+    analyzeBtn.disabled = false;
+    clearBtn.style.display = 'inline-block';
+    uploadPanel.style.display = 'none';
+    result.classList.remove('show');
+    errorBox.classList.remove('show');
+  };
+  reader.readAsDataURL(file);
+});
+
+clearBtn.addEventListener('click', ()=>{
+  base64Image = null;
+  fileInput.value = '';
+  previewWrap.style.display = 'none';
+  uploadPanel.style.display = 'block';
+  analyzeBtn.disabled = true;
+  clearBtn.style.display = 'none';
+  result.classList.remove('show');
+  errorBox.classList.remove('show');
+});
+
+analyzeBtn.addEventListener('click', async ()=>{
+  if(!base64Image) return;
+  loading.classList.add('show');
+  result.classList.remove('show');
+  errorBox.classList.remove('show');
+  analyzeBtn.disabled = true;
+
+  try{
+    const res = await fetch('/api/analyze', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ image: base64Image })
+    });
+    if(!res.ok){
+      const errData = await res.json().catch(()=>({}));
+      throw new Error(errData.error || 'سرور سے جواب نہیں ملا');
+    }
+    const data = await res.json();
+    renderResult(data);
+  }catch(err){
+    errorBox.textContent = 'خرابی: ' + err.message;
+    errorBox.classList.add('show');
+  }finally{
+    loading.classList.remove('show');
+    analyzeBtn.disabled = false;
+  }
+});
+
+function renderResult(data){
+  const riskBadge = document.getElementById('riskBadge');
+  const obsList = document.getElementById('obsList');
+  const summaryBox = document.getElementById('summaryBox');
+
+  const riskClass = data.risk_level === 'high' ? 'risk-high' : (data.risk_level === 'medium' ? 'risk-medium' : 'risk-low');
+  const riskLabel = data.risk_level === 'high' ? 'زیادہ شک — احتیاط کریں' : (data.risk_level === 'medium' ? 'درمیانہ شک — مزید جانچ کریں' : 'کوئی واضح خرابی نظر نہیں آئی');
+  riskBadge.innerHTML = `<span class="risk-badge ${riskClass}">${riskLabel}</span>`;
+
+  obsList.innerHTML = '';
+  (data.observations || []).forEach(o=>{
+    const div = document.createElement('div');
+    div.className = 'obs-item';
+    div.innerHTML = `<b>${o.title}</b><span>${o.note}</span>`;
+    obsList.appendChild(div);
+  });
+
+  summaryBox.textContent = data.summary || '';
+  result.classList.add('show');
+}
+</script>
+</body>
+</html>
