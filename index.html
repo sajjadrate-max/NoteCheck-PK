@@ -11,18 +11,31 @@
     --paper:#F2EAD4; --paper-dark:#E7DCBC; --ink:#211C13;
     --green:#123526; --green-deep:#0B241A; --gold:#A9812F;
     --maroon:#6E2A2A; --amber:#8A5A1E; --line:rgba(33,28,19,0.28);
+    --card:#FBF7EC;
   }
   *{box-sizing:border-box;}
   body{
     margin:0; background:var(--paper); color:var(--ink);
     font-family:'Noto Nastaliq Urdu', serif; line-height:2;
-    padding: 26px 14px 60px;
+    padding: 0 0 60px;
   }
-  .wrap{max-width:640px; margin:0 auto;}
-  header{text-align:center; margin-bottom:18px;}
-  .rule{height:3px; width:120px; margin:0 auto 14px; background:repeating-linear-gradient(90deg, var(--gold) 0 6px, transparent 6px 10px);}
-  h1{font-size:1.7rem; color:var(--green-deep); margin:0 0 8px; font-weight:700;}
-  header p{margin:0; color:rgba(33,28,19,0.75); font-size:1rem;}
+  .wrap{max-width:640px; margin:0 auto; padding: 0 16px;}
+
+  .letterhead{
+    background: repeating-linear-gradient(90deg, var(--gold) 0 2px, transparent 2px 14px);
+    height:6px; width:100%;
+  }
+  header{
+    text-align:center; padding: 22px 14px 20px;
+    background: var(--green-deep); color: var(--paper);
+    border-bottom: 3px solid var(--gold);
+  }
+  header .eyebrow-mark{
+    font-family:'Spectral', serif; font-size:0.78rem; letter-spacing:0.04em;
+    color: rgba(242,234,212,0.6); margin-bottom:6px;
+  }
+  h1{font-size:1.55rem; margin:0 0 6px; font-weight:700; color:var(--paper);}
+  header p{margin:0; color:rgba(242,234,212,0.78); font-size:0.95rem;}
 
   .warn-banner{
     border:2px solid var(--maroon);
@@ -34,6 +47,56 @@
   }
   .warn-banner b{color:var(--maroon); display:block; margin-bottom:4px; font-size:1.02rem;}
 
+  .denom-section{ margin: 22px 0 6px; }
+  .denom-section .label-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    margin-bottom:10px;
+  }
+  .denom-section .label-row span:first-child{ font-size:1.05rem; font-weight:600; }
+  .denom-section .label-row span.req{ font-size:0.82rem; color:var(--maroon); font-family:'Spectral',serif; }
+
+  .denom-row{
+    display:flex; gap:10px; overflow-x:auto; padding: 4px 2px 12px;
+    scrollbar-width: thin;
+  }
+  .denom-chip{
+    flex: 0 0 auto; width:74px; height:96px; border-radius:5px;
+    position:relative; cursor:pointer; color:#fff;
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+    padding-bottom:8px;
+    border:2px solid rgba(0,0,0,0.25);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .denom-chip::before{
+    content:''; position:absolute; inset:6px; border:1px dashed rgba(255,255,255,0.45);
+    border-radius:3px; pointer-events:none;
+  }
+  .denom-chip .val{ font-family:'Spectral', serif; font-weight:700; font-size:1.15rem; line-height:1; }
+  .denom-chip .cur{ font-size:0.72rem; margin-top:2px; opacity:0.9; }
+  .denom-chip.selected{
+    transform: translateY(-6px);
+    box-shadow: 0 4px 0 var(--gold), inset 0 0 0 1px rgba(255,255,255,0.3);
+    border-color: var(--gold);
+  }
+  .denom-chip:focus-visible{ outline:3px solid var(--gold); outline-offset:2px; }
+
+  .d5000{ background:#5B3A6E; }
+  .d1000{ background:#8B6A2E; }
+  .d500 { background:#2F6B3D; }
+  .d100 { background:#217A72; }
+  .d50  { background:#3B6E33; }
+  .d20  { background:#B15A2E; }
+  .d10  { background:#5C7A45; }
+
+  .light-section{ margin-top:18px; }
+  .light-tip{
+    border:1.5px solid var(--gold); background: rgba(169,129,47,0.1);
+    border-radius:4px; padding:12px 14px; font-size:0.92rem; margin-bottom:10px;
+  }
+  .light-tip b{ display:block; color:var(--amber); margin-bottom:4px; font-size:0.96rem; }
+  .light-panel{ padding: 18px 16px; }
+
   .upload-panel{
     border:2px dashed var(--line);
     border-radius:6px;
@@ -42,6 +105,7 @@
     background: var(--paper-dark);
     cursor:pointer;
     transition: border-color .2s ease;
+    margin-top: 8px;
   }
   .upload-panel:hover{ border-color: var(--gold); }
   .upload-panel input{ display:none; }
@@ -76,10 +140,18 @@
   .result{ display:none; margin-top:24px; }
   .result.show{ display:block; }
 
+  .result-head{
+    display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap;
+  }
+  .denom-tag{
+    font-family:'Spectral', serif; font-size:0.85rem; padding:4px 10px;
+    border-radius:3px; color:#fff;
+  }
+
   .risk-badge{
     display:inline-block; padding:6px 16px; border-radius:3px;
     font-family:'Spectral', serif; font-weight:600; font-size:1rem;
-    margin-bottom:14px; border:1.5px solid;
+    border:1.5px solid;
   }
   .risk-low{ background:rgba(18,53,38,0.08); border-color:var(--green); color:var(--green-deep); }
   .risk-medium{ background:rgba(138,90,30,0.1); border-color:var(--amber); color:var(--amber); }
@@ -111,17 +183,35 @@
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <header>
-    <div class="rule"></div>
-    <h1>نوٹ اسکینر — AI بصری جائزہ</h1>
-    <p>پاکستانی کرنسی نوٹ کی تصویر اپلوڈ کریں، AI نظر آنے والی خصوصیات کا جائزہ لے گا</p>
-  </header>
+<div class="letterhead"></div>
+<header>
+  <div class="eyebrow-mark">حکومتِ پاکستان — کرنسی نوٹ معائنہ سہولت</div>
+  <h1>نوٹ اسکینر — AI بصری جائزہ</h1>
+  <p>پاکستانی کرنسی نوٹ کی تصویر اپلوڈ کریں، AI نظر آنے والی خصوصیات کا جائزہ لے گا</p>
+</header>
+
+<div class="wrap">
 
   <div class="warn-banner">
     <b>⚠ اہم انتباہ</b>
     یہ صرف تصویر کی بنیاد پر ایک AI اندازہ ہے، حتمی ثبوت نہیں۔ UV، مقناطیسی سیاہی اور کاغذ کی ساخت جیسی چیزیں تصویر سے چیک نہیں ہو سکتیں۔ کسی بھی مشکوک نوٹ کی حتمی تصدیق ہمیشہ اپنے بینک یا اسٹیٹ بینک آف پاکستان سے کروائیں۔ اس نتیجے کی بنیاد پر لین دین کا فیصلہ نہ کریں۔
+  </div>
+
+  <div class="denom-section">
+    <div class="label-row">
+      <span>نوٹ کی مالیت منتخب کریں</span>
+      <span class="req">درست جائزے کے لیے ضروری</span>
+    </div>
+    <div class="denom-row" id="denomRow" role="listbox" aria-label="نوٹ کی مالیت">
+      <div class="denom-chip d5000" data-value="5000" role="option" tabindex="0"><span class="val">5000</span><span class="cur">روپے</span></div>
+      <div class="denom-chip d1000" data-value="1000" role="option" tabindex="0"><span class="val">1000</span><span class="cur">روپے</span></div>
+      <div class="denom-chip d500" data-value="500" role="option" tabindex="0"><span class="val">500</span><span class="cur">روپے</span></div>
+      <div class="denom-chip d100" data-value="100" role="option" tabindex="0"><span class="val">100</span><span class="cur">روپے</span></div>
+      <div class="denom-chip d50" data-value="50" role="option" tabindex="0"><span class="val">50</span><span class="cur">روپے</span></div>
+      <div class="denom-chip d20" data-value="20" role="option" tabindex="0"><span class="val">20</span><span class="cur">روپے</span></div>
+      <div class="denom-chip d10" data-value="10" role="option" tabindex="0"><span class="val">10</span><span class="cur">روپے</span></div>
+    </div>
   </div>
 
   <label class="upload-panel" id="uploadPanel">
@@ -133,6 +223,23 @@
 
   <div class="preview-wrap" id="previewWrap" style="display:none;">
     <img id="previewImg" alt="منتخب کردہ نوٹ کی تصویر">
+  </div>
+
+  <div class="light-section" id="lightSection" style="display:none;">
+    <div class="light-tip">
+      <b>💡 روشنی کے سامنے تصویر (تجویز کردہ)</b>
+      نوٹ کو موبائل ٹارچ، دھوپ یا بلب کے سامنے رکھیں تاکہ واٹر مارک اور سیکیورٹی تھریڈ نظر آئیں، پھر اُس حالت میں تصویر لیں۔ اس سے جائزہ زیادہ درست ہوگا۔
+    </div>
+    <label class="upload-panel light-panel" id="lightUploadPanel">
+      <span class="upload-icon">🔦</span>
+      <span>روشنی کے سامنے کی تصویر شامل کریں</span><br>
+      <span class="hint">اختیاری، لیکن سفارش کی جاتی ہے</span>
+      <input type="file" id="lightFileInput" accept="image/*" capture="environment">
+    </label>
+    <div class="preview-wrap" id="lightPreviewWrap" style="display:none;">
+      <img id="lightPreviewImg" alt="روشنی کے سامنے نوٹ کی تصویر">
+      <div><button class="secondary" id="lightClearBtn" style="margin-top:8px;">ہٹا دیں</button></div>
+    </div>
   </div>
 
   <div class="actions">
@@ -148,7 +255,10 @@
   <div class="error-box" id="errorBox"></div>
 
   <div class="result" id="result">
-    <div id="riskBadge"></div>
+    <div class="result-head">
+      <div id="riskBadge"></div>
+      <span class="denom-tag" id="denomTag"></span>
+    </div>
     <div class="obs-list" id="obsList"></div>
     <div class="summary-box" id="summaryBox"></div>
   </div>
@@ -169,8 +279,44 @@ const uploadPanel = document.getElementById('uploadPanel');
 const loading = document.getElementById('loading');
 const result = document.getElementById('result');
 const errorBox = document.getElementById('errorBox');
+const denomRow = document.getElementById('denomRow');
+const lightSection = document.getElementById('lightSection');
+const lightFileInput = document.getElementById('lightFileInput');
+const lightUploadPanel = document.getElementById('lightUploadPanel');
+const lightPreviewWrap = document.getElementById('lightPreviewWrap');
+const lightPreviewImg = document.getElementById('lightPreviewImg');
+const lightClearBtn = document.getElementById('lightClearBtn');
 
 let base64Image = null;
+let base64LightImage = null;
+let selectedDenom = null;
+
+const denomColors = {
+  '5000':'#5B3A6E','1000':'#8B6A2E','500':'#2F6B3D','100':'#217A72',
+  '50':'#3B6E33','20':'#B15A2E','10':'#5C7A45'
+};
+
+function updateAnalyzeState(){
+  analyzeBtn.disabled = !(base64Image && selectedDenom);
+}
+
+denomRow.addEventListener('click', (e)=>{
+  const chip = e.target.closest('.denom-chip');
+  if(!chip) return;
+  selectChip(chip);
+});
+denomRow.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter' || e.key === ' '){
+    const chip = e.target.closest('.denom-chip');
+    if(chip){ e.preventDefault(); selectChip(chip); }
+  }
+});
+function selectChip(chip){
+  document.querySelectorAll('.denom-chip').forEach(c=>c.classList.remove('selected'));
+  chip.classList.add('selected');
+  selectedDenom = chip.dataset.value;
+  updateAnalyzeState();
+}
 
 function resizeImage(file, maxDim, quality){
   return new Promise((resolve, reject)=>{
@@ -208,11 +354,12 @@ fileInput.addEventListener('change', async (e)=>{
     base64Image = await resizeImage(file, 1280, 0.75);
     previewImg.src = base64Image;
     previewWrap.style.display = 'block';
-    analyzeBtn.disabled = false;
     clearBtn.style.display = 'inline-block';
     uploadPanel.style.display = 'none';
+    lightSection.style.display = 'block';
     result.classList.remove('show');
     errorBox.classList.remove('show');
+    updateAnalyzeState();
   }catch(err){
     errorBox.textContent = 'خرابی: تصویر پروسیس نہیں ہو سکی، دوبارہ کوشش کریں';
     errorBox.classList.add('show');
@@ -224,14 +371,39 @@ clearBtn.addEventListener('click', ()=>{
   fileInput.value = '';
   previewWrap.style.display = 'none';
   uploadPanel.style.display = 'block';
-  analyzeBtn.disabled = true;
   clearBtn.style.display = 'none';
+  lightSection.style.display = 'none';
+  resetLightImage();
   result.classList.remove('show');
   errorBox.classList.remove('show');
+  updateAnalyzeState();
 });
 
+lightFileInput.addEventListener('change', async (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  try{
+    base64LightImage = await resizeImage(file, 1280, 0.75);
+    lightPreviewImg.src = base64LightImage;
+    lightPreviewWrap.style.display = 'block';
+    lightUploadPanel.style.display = 'none';
+  }catch(err){
+    errorBox.textContent = 'خرابی: تصویر پروسیس نہیں ہو سکی، دوبارہ کوشش کریں';
+    errorBox.classList.add('show');
+  }
+});
+
+lightClearBtn.addEventListener('click', resetLightImage);
+
+function resetLightImage(){
+  base64LightImage = null;
+  lightFileInput.value = '';
+  lightPreviewWrap.style.display = 'none';
+  lightUploadPanel.style.display = 'block';
+}
+
 analyzeBtn.addEventListener('click', async ()=>{
-  if(!base64Image) return;
+  if(!base64Image || !selectedDenom) return;
   loading.classList.add('show');
   result.classList.remove('show');
   errorBox.classList.remove('show');
@@ -241,7 +413,7 @@ analyzeBtn.addEventListener('click', async ()=>{
     const res = await fetch('/api/analyze', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ image: base64Image })
+      body: JSON.stringify({ image: base64Image, light_image: base64LightImage, denomination: selectedDenom })
     });
     if(!res.ok){
       const errData = await res.json().catch(()=>({}));
@@ -254,7 +426,7 @@ analyzeBtn.addEventListener('click', async ()=>{
     errorBox.classList.add('show');
   }finally{
     loading.classList.remove('show');
-    analyzeBtn.disabled = false;
+    updateAnalyzeState();
   }
 });
 
@@ -262,10 +434,14 @@ function renderResult(data){
   const riskBadge = document.getElementById('riskBadge');
   const obsList = document.getElementById('obsList');
   const summaryBox = document.getElementById('summaryBox');
+  const denomTag = document.getElementById('denomTag');
 
   const riskClass = data.risk_level === 'high' ? 'risk-high' : (data.risk_level === 'medium' ? 'risk-medium' : 'risk-low');
   const riskLabel = data.risk_level === 'high' ? 'زیادہ شک — احتیاط کریں' : (data.risk_level === 'medium' ? 'درمیانہ شک — مزید جانچ کریں' : 'کوئی واضح خرابی نظر نہیں آئی');
   riskBadge.innerHTML = `<span class="risk-badge ${riskClass}">${riskLabel}</span>`;
+
+  denomTag.textContent = selectedDenom + ' روپے کا نوٹ';
+  denomTag.style.background = denomColors[selectedDenom] || '#555';
 
   obsList.innerHTML = '';
   (data.observations || []).forEach(o=>{
