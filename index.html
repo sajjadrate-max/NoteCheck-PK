@@ -2,11 +2,19 @@
 <html lang="ur" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>نوٹ اسکینر — AI بصری جائزہ</title>
+<meta name="description" content="پاکستانی کرنسی نوٹ کی تصویر اپلوڈ کریں، AI نظر آنے والی خصوصیات کا جائزہ لے گا۔ یہ ٹول تعلیمی مقصد کے لیے ہے، حتمی تصدیق کا متبادل نہیں۔">
+<meta property="og:title" content="نوٹ اسکینر — AI بصری جائزہ">
+<meta property="og:description" content="پاکستانی کرنسی نوٹ کی تصویر اپلوڈ کریں، AI نظر آنے والی خصوصیات کا جائزہ لے گا۔">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ur_PK">
+<meta property="og:image" content="/icons/icon-512.png">
+<meta name="twitter:card" content="summary">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#0B241A">
 <link rel="icon" href="/icons/icon-192.png">
+<link rel="shortcut icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -290,7 +298,8 @@
   </div>
 
   <footer>
-    یہ ٹول تعلیمی و رہنمائی کے مقصد کے لیے ہے۔ <strong>حتمی تصدیق کا متبادل نہیں۔</strong>
+    یہ ٹول تعلیمی و رہنمائی کے مقصد کے لیے ہے۔ <strong>حتمی تصدیق کا متبادل نہیں۔</strong><br>
+    آپ کی اپلوڈ کردہ تصویر صرف تجزیے کے لیے AI سروس کو بھیجی جاتی ہے اور سرور پر محفوظ نہیں کی جاتی۔
   </footer>
 
 </div>
@@ -346,6 +355,10 @@ function selectChip(chip){
 
 function resizeImage(file, maxDim, quality){
   return new Promise((resolve, reject)=>{
+    if(file.size > 25 * 1024 * 1024){
+      reject(new Error('تصویر کا حجم بہت زیادہ ہے (25MB سے کم رکھیں)'));
+      return;
+    }
     const reader = new FileReader();
     reader.onload = ()=>{
       const img = new Image();
@@ -387,7 +400,7 @@ fileInput.addEventListener('change', async (e)=>{
     errorBox.classList.remove('show');
     updateAnalyzeState();
   }catch(err){
-    errorBox.textContent = 'خرابی: تصویر پروسیس نہیں ہو سکی، دوبارہ کوشش کریں';
+    errorBox.textContent = 'خرابی: ' + (err.message || 'تصویر پروسیس نہیں ہو سکی، دوبارہ کوشش کریں');
     errorBox.classList.add('show');
   }
 });
@@ -414,7 +427,7 @@ lightFileInput.addEventListener('change', async (e)=>{
     lightPreviewWrap.style.display = 'block';
     lightUploadPanel.style.display = 'none';
   }catch(err){
-    errorBox.textContent = 'خرابی: تصویر پروسیس نہیں ہو سکی، دوبارہ کوشش کریں';
+    errorBox.textContent = 'خرابی: ' + (err.message || 'تصویر پروسیس نہیں ہو سکی، دوبارہ کوشش کریں');
     errorBox.classList.add('show');
   }
 });
